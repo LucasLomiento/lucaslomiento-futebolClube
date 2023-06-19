@@ -10,7 +10,7 @@ InferCreationAttributes<SequelizeUser>> {
 
   declare username: string;
 
-  declare role: number;
+  declare role: string;
 
   declare email: string;
 
