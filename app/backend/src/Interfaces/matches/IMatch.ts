@@ -6,3 +6,12 @@ export interface IMatch {
   awayTeamGoals: number,
   inProgress: boolean,
 }
+
+export interface IMatchesResponse extends IMatch {
+  homeTeam: {
+    name: string,
+  },
+  awayTeam: {
+    name: string,
+  },
+}

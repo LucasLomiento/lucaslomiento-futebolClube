@@ -29,7 +29,6 @@ export default class LoginMiddleware {
 
     try {
       verifys(token);
-      console.log(verifys(token), 'verifys(token)');
       next();
     } catch (error) {
       return res.status(mapStatusHTTP('UNAUTHORIZED'))

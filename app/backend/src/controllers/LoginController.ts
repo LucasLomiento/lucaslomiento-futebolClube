@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import LoginService from '../services/LoginService';
 import mapStatusHTTP from '../utils/mapStatusHTTP';
+import { ServiceResponse } from '../Interfaces/ServiceResponse';
 
 export default class LoginController {
   constructor(
@@ -9,7 +10,10 @@ export default class LoginController {
 
   public async login(_req: Request, res: Response) {
     const { email, password } = _req.body;
-    const serviceResponse = await this.loginService.login(email, password);
+
+    const serviceResponse:
+    ServiceResponse<{ token:string }> = await this.loginService.login(email, password);
+
     return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }
 
