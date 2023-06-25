@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { verifys } from '../auth/jwt.util';
+import HandleToken from '../auth/HandleToken';
 import mapStatusHTTP from '../utils/mapStatusHTTP';
 
 export default class LoginMiddleware {
   private static emailRegex = /^[\w.-]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,})+$/i;
+  private static handleToken = new HandleToken();
 
   static login(req: Request, res: Response, next: NextFunction): Response | void {
     const { email, password } = req.body;
@@ -28,7 +29,7 @@ export default class LoginMiddleware {
     }
 
     try {
-      verifys(token);
+      LoginMiddleware.handleToken.verify(token);
       next();
     } catch (error) {
       return res.status(mapStatusHTTP('UNAUTHORIZED'))

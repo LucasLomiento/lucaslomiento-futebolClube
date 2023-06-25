@@ -51,4 +51,10 @@ export default class MatchModel {
     });
     return { status: 'CREATED', data: sequelizeResponse.dataValues };
   }
+
+  async findHomeMatchesDoneByTeamId(teamId: number) {
+    return this.sequelizeMatch.findAll(
+      { where: { homeTeamId: teamId, inProgress: false } },
+    );
+  }
 }

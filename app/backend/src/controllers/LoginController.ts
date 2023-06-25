@@ -18,13 +18,9 @@ export default class LoginController {
   }
 
   public async role(_req: Request, res: Response) {
-    const { authorization } = _req.headers;
+    const token = _req.headers.authorization as string;
 
-    if (!authorization) {
-      return res.status(mapStatusHTTP('UNAUTHORIZED')).json({ message: 'Token not found' });
-    }
-
-    const serviceResponse = await this.loginService.role(authorization);
+    const serviceResponse = await this.loginService.role(token);
     return res.status(mapStatusHTTP(serviceResponse.status)).json(serviceResponse.data);
   }
 }

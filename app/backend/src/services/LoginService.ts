@@ -3,7 +3,7 @@ import { IUser } from '../Interfaces/users/IUser';
 import { IUsersModel } from '../Interfaces/users/IUsersModel';
 import { ServiceResponse } from '../Interfaces/ServiceResponse';
 
-import { sign, verifys } from '../auth/jwt.util';
+import HandleToken from '../auth/HandleToken';
 
 import { IEncrypter } from '../Interfaces/IEncrypter';
 import EncryptBcrypt from '../auth/EncryptBcrypt';
@@ -12,6 +12,7 @@ export default class LoginService {
   constructor(
     private loginModel: IUsersModel = new UserModel(),
     private encrypter: IEncrypter = new EncryptBcrypt(),
+    private handleToken = new HandleToken(),
   ) {}
 
   public async login(email: string, password: string)
@@ -28,18 +29,19 @@ export default class LoginService {
       return { status: 'UNAUTHORIZED', data: { message: 'Invalid email or password' } };
     }
 
-    const token = sign({ id: loginResponse.id, email: loginResponse.email });
+    const token = this.handleToken.sign({
+      id: loginResponse.id,
+      email: loginResponse.email,
+      role: loginResponse.role,
+    });
+
     return { status: 'SUCCESSFUL', data: { token } };
   }
 
   public async role(token: string): Promise<ServiceResponse<{ role: string }>> {
-    const { id } = verifys(token);
+    const { id } = this.handleToken.verify(token);
 
-    const user = await this.loginModel.findById(id);
-
-    if (!user) {
-      return { status: 'UNAUTHORIZED', data: { message: 'Invalid token' } };
-    }
+    const user = await this.loginModel.findById(id) as IUser;
 
     return { status: 'SUCCESSFUL', data: { role: user.role } };
   }

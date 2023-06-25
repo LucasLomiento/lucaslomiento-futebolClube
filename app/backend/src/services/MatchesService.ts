@@ -44,7 +44,7 @@ export default class MatchesService {
     const modelResponse = await this.matchesModel
       .create(homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals);
     return {
-      status: `${modelResponse.status}`,
+      status: modelResponse.status,
       data: modelResponse.data,
     };
   }
